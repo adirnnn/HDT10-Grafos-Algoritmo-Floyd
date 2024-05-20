@@ -3,28 +3,34 @@ package uvg.edu.gt;
 import java.util.*;
 
 public class Grafo {
+    // Mapa que contiene las conexiones entre ciudades y sus distancias
     private Map<String, Map<String, Integer>> conexiones;
 
     public Grafo() {
         conexiones = new HashMap<>();
     }
 
+    // Método para agregar una conexión entre dos ciudades con una distancia dada
     public void agregarConexion(String ciudad1, String ciudad2, int distancia) {
+        // Para asegurarse de que ambas ciudades están en el mapa
         conexiones.putIfAbsent(ciudad1, new HashMap<String, Integer>());
         conexiones.putIfAbsent(ciudad2, new HashMap<String, Integer>());
         conexiones.get(ciudad1).put(ciudad2, distancia);
     }
 
+    // Método para obtener la distancia entre dos ciudades
     public int obtenerDistancia(String ciudad1, String ciudad2) {
         return conexiones.containsKey(ciudad1) && conexiones.get(ciudad1).containsKey(ciudad2)
                 ? conexiones.get(ciudad1).get(ciudad2)
                 : Integer.MAX_VALUE;
     }
 
+    // Método para obtener el conjunto de todas las ciudades en el grafo
     public Set<String> obtenerCiudades() {
         return conexiones.keySet();
     }
 
+    // Implementación del algoritmo de Floyd-Warshall para calcular las rutas más cortas entre todas las parejas de ciudades
     public void aplicarFloydWarshall() {
         for (String intermedia : obtenerCiudades()) {
             for (String origen : obtenerCiudades()) {
@@ -43,7 +49,9 @@ public class Grafo {
         }
     }
 
+    // Método para calcular la ruta más corta entre dos ciudades específicas
     public String rutaMasCorta(String origen, String destino) {
+        // Verificar si las ciudades están en el grafo
         if (!conexiones.containsKey(origen) || !conexiones.containsKey(destino)) {
             return "No hay ruta disponible.";
         }
@@ -75,8 +83,9 @@ public class Grafo {
         }
         ciudadesIntermedias.add(destino);
         return "Ruta más corta: " + ciudadesIntermedias + ", distancia: " + distancia + " KM.";
-    }    
+    }
 
+    // Método para calcular la ciudad que queda en el centro del grafo
     public String centroGrafo() {
         String centro = null;
         int menorDistancia = Integer.MAX_VALUE;
@@ -95,7 +104,9 @@ public class Grafo {
         return "El centro del grafo es: " + centro;
     }
 
+    // Método para modificar la conexión entre dos ciudades
     public void modificarConexion(String ciudad1, String ciudad2, int distancia) {
+        // Verificar si la conexión existe y modificarla
         if (conexiones.containsKey(ciudad1) && conexiones.get(ciudad1).containsKey(ciudad2)) {
             conexiones.get(ciudad1).put(ciudad2, distancia);
         } else {
@@ -103,14 +114,16 @@ public class Grafo {
         }
     }
 
-    // Método para mostrar la matriz de adyacencia
+    // Método para mostrar la matriz de adyacencia del grafo
     public void mostrarMatrizAdyacencia() {
         System.out.println("Matriz de adyacencia:");
         System.out.print("\t");
+        // Imprimir las ciudades en la primera fila
         for (String ciudad : obtenerCiudades()) {
             System.out.print(ciudad + "\t");
         }
         System.out.println();
+        // Imprimir la distancia entre las ciudades
         for (String ciudadOrigen : obtenerCiudades()) {
             System.out.print(ciudadOrigen + "\t");
             for (String ciudadDestino : obtenerCiudades()) {
